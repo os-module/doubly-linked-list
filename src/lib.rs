@@ -12,6 +12,9 @@ pub struct ListHead {
     pub next: *mut ListHead,
 }
 
+unsafe impl Sync for ListHead{}
+unsafe impl Send for ListHead{}
+
 impl Default for ListHead {
     fn default() -> Self {
         Self {
@@ -49,8 +52,9 @@ macro_rules! list_head {
 
 /// usage
 ///```
-/// use double_link_list::{list_add, list_head, list_head_init,list_add_in, ListHead};
+/// use doubly_linked_list::*;
 /// use core::ptr::{write_volatile, read_volatile};
+///
 /// struct Demo {
 ///    pub list_head: ListHead,
 ///    first:usize,
@@ -85,7 +89,7 @@ macro_rules! list_add_tail {
 #[macro_export]
 macro_rules! list_add_in_tail {
     ($new:expr,$prev:expr,$next:expr) => {
-        // println!("new:{:?}, prev: {:?}, next: {:?}", $new,$prev, $next);
+        // //println!("new:{:?}, prev: {:?}, next: {:?}", $new,$prev, $next);
         // use volatile to read and write
         unsafe {
             (*$prev).next = $new;
@@ -104,7 +108,7 @@ macro_rules! list_add_in_tail {
 #[macro_export]
 macro_rules! list_add_in {
     ($new:expr,$prev:expr,$next:expr) => {
-        // println!("new:{:?}, prev: {:?}, next: {:?}", $new,$prev, $next);
+        // //println!("new:{:?}, prev: {:?}, next: {:?}", $new,$prev, $next);
         // use volatile to read and write
         unsafe {
             (*$next).prev = $new;
@@ -280,11 +284,11 @@ mod test {
         assert_eq!(demo1.list_head.next, to_list_head_ptr!(head));
         assert_eq!(demo2.list_head.prev, to_list_head_ptr!(head));
 
-        println!("head.next:{:?}", head.next);
-        println!("head.prev:{:?}", head.prev);
-        println!("demo1_list_head:{:?}", to_list_head_ptr!(demo1.list_head));
-        println!("demo1.prev:{:?}", demo1.list_head.prev);
-        println!("demo1.next:{:?}", demo1.list_head.next);
+        //println!("head.next:{:?}", head.next);
+        //println!("head.prev:{:?}", head.prev);
+        //println!("demo1_list_head:{:?}", to_list_head_ptr!(demo1.list_head));
+        //println!("demo1.prev:{:?}", demo1.list_head.prev);
+        //println!("demo1.next:{:?}", demo1.list_head.next);
     }
     #[test]
     fn test_list_head_add_tail() {
@@ -322,11 +326,11 @@ mod test {
         assert_eq!(demo1.list_head.next, to_list_head_ptr!(demo2.list_head));
         assert_eq!(demo2.list_head.prev, to_list_head_ptr!(demo1.list_head));
 
-        println!("head.next:{:?}", head.next);
-        println!("head.prev:{:?}", head.prev);
-        println!("demo1_list_head:{:?}", to_list_head_ptr!(demo1.list_head));
-        println!("demo1.prev:{:?}", demo1.list_head.prev);
-        println!("demo1.next:{:?}", demo1.list_head.next);
+        //println!("head.next:{:?}", head.next);
+        //println!("head.prev:{:?}", head.prev);
+        //println!("demo1_list_head:{:?}", to_list_head_ptr!(demo1.list_head));
+        //println!("demo1.prev:{:?}", demo1.list_head.prev);
+        //println!("demo1.next:{:?}", demo1.list_head.next);
     }
     #[test]
     fn test_list_del() {
@@ -359,11 +363,11 @@ mod test {
         assert_eq!(head.next, to_list_head_ptr!(head));
         assert_eq!(head.prev, to_list_head_ptr!(head));
 
-        println!("head.next:{:?}", head.next);
-        println!("head.prev:{:?}", head.prev);
-        println!("demo1_list_head:{:?}", to_list_head_ptr!(demo1.list_head));
-        println!("demo1.prev:{:?}", demo1.list_head.prev);
-        println!("demo1.next:{:?}", demo1.list_head.next);
+        //println!("head.next:{:?}", head.next);
+        //println!("head.prev:{:?}", head.prev);
+        //println!("demo1_list_head:{:?}", to_list_head_ptr!(demo1.list_head));
+        //println!("demo1.prev:{:?}", demo1.list_head.prev);
+        //println!("demo1.next:{:?}", demo1.list_head.next);
     }
     #[test]
     fn test_offset_of() {
@@ -406,8 +410,8 @@ mod test {
         list_add_tail!(to_list_head_ptr!(head2), to_list_head_ptr!(head));
         list_add_tail!(to_list_head_ptr!(head3), to_list_head_ptr!(head));
         let x = &head;
-        x.iter().for_each(|list_head|{
-            println!("list_head:{:?}", list_head);
+        x.iter().for_each(|_list_head|{
+            //println!("list_head:{:?}", list_head);
         });
         assert_eq!(x.next, to_list_head_ptr!(head2));
         assert_eq!(x.len(), 2);
